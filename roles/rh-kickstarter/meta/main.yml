@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Marcos Amorim
+  description: Install tftp and prepare kickstart
+  license: Apache
+  min_ansible_version: 1.7
+  platforms:
+    - name: Red Hat Enterprise 7
+      versions:
+        - 7.2
+  categories:
+    - system
+dependencies:
+  - { role: rh-subscribe, when: use_rhel }

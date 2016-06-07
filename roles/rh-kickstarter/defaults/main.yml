@@ -1,0 +1,5 @@
+---
+rhel_prefix: rhel-server-7.2
+use_rhel_iso: false
+use_rhel_http: false
+repo_address: "{{ internal_ip }}"

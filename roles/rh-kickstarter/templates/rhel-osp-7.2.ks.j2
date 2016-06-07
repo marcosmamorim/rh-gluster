@@ -1,0 +1,35 @@
+#version=RHEL7
+install
+url --url http://{{ internal_ip }}/{{ rhel_prefix }}/
+reboot
+auth --enableshadow --passalgo=sha512
+firstboot --disable
+ignoredisk --only-use=vda
+keyboard --vckeymap=us --xlayouts='us'
+lang en_US.UTF-8
+
+network  --bootproto=dhcp --device=eth0 --onboot=on --ipv6=auto
+network  --hostname=ansible-install-rhel-7-2
+# 123@mudar
+rootpw --iscrypted $6$yk.W0sa9$eyOZct6s3yU8jRQI3wqswtdFvYqdVRLN9CHJF.czwPd1JtzfSzqU3OK7nhaHHMb28OAMKa0y5cKMhtGb/4SDK.
+timezone {{ timezone }} --isUtc
+bootloader --location=mbr --boot-drive=vda
+part /boot --fstype=xfs --asprimary --size=512
+part pv.1 --grow --size=1
+volgroup sysvg pv.1
+logvol / --vgname=sysvg --size=20480 --grow --name=root
+logvol /var --vgname=sysvg --size=20000 --grow --name=var
+logvol /var/lib/mongo --vgname=sysvg --size=20000 --grow --name=mongo
+logvol swap --vgname=sysvg --size=4000 --maxsize=16000 --grow --fstype=swap --name=swap
+clearpart --drives=vda --all --initlabel
+
+%packages
+@base
+vim-enhanced
+wget
+redhat-lsb
+psmisc
+ntp
+nfs-utils
+
+%end

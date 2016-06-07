@@ -1,0 +1,14 @@
+---
+
+- name: include packages
+  include: packages.yml
+
+- name: include configuration
+  include: configuration.yml
+
+- name: enable and restart services
+  service: name={{ item }} state=restarted enabled=yes
+  with_items:
+    - httpd
+    - xinetd
+    - dhcpd

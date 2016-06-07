@@ -1,0 +1,16 @@
+---
+
+- name: upgrade all packages
+  yum: name=* state=latest
+
+- name: install tftp packages
+  yum: pkg={{ item }} state=present
+  with_items:
+    - createrepo
+    - dhcp
+    - libselinux-python
+    - httpd
+    - httpd-tools
+    - xinetd
+    - pykickstart
+    - tftp-server

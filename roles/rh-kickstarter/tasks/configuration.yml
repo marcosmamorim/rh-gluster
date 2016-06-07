@@ -1,0 +1,32 @@
+---
+
+- name: create tftp xinetd service
+  template: src=tftp.j2 dest=/etc/xinetd.d/tftp mode=0644 owner=root group=root
+
+- name: create dirs rhel-server
+  file:
+    dest={{ item }}
+    state=directory
+  with_items:
+    - /var/www/html/iso
+    - "/var/www/html/{{ rhel_prefix }}"
+    - /var/www/html/ks
+
+- name: Copy over tftpboot configuration
+  copy:
+    src=tftpboot
+    dest=/var/lib/
+  when: use_rhel_iso or use_rhel_http
+
+- name: configure pxe
+  template: src=default.j2 dest=/var/lib/tftpboot/pxelinux/pxelinux.cfg/default mode=0644
+  when: use_rhel_iso or use_rhel_http
+
+- name: template ks rhel
+  template: src={{item}}.ks.j2 dest=/var/www/html/ks/{{item}}.ks mode=0644
+  with_items:
+    - "{{rhel_prefix}}"
+    - "{{rhel_prefix}}-compute"
+
+- name: Dhcp Configure
+  template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf mode=0644
