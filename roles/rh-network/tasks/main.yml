@@ -1,0 +1,63 @@
+---
+# TODO: kill dhclient
+- name: include network packages
+  include: packages.yml
+
+- name: include network reset
+  include: reset.yml
+  when: network_reset
+
+- name: include network bond
+  include: bond.yml
+  when: network_bond_interfaces is defined and network_bond_interfaces |length > 0
+
+- name: include network ethernet
+  include: ethernet.yml
+  when: network_ether_interfaces is defined and network_ether_interfaces |length > 0
+
+- name: include network bridge
+  include: bridge.yml
+  when: network_bridge_interfaces is defined and network_bridge_interfaces |length > 0
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}.{{dns_domain}}"
+
+- name: set resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: 0644
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: network_firewalld
+
+- name: restart network
+  service:
+    name: network
+    state: restarted
+    enabled: yes
+
+- name: setup kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items: network_modules
+
+- name: set sysctl parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_set: yes
+    reload: yes
+    ignoreerrors: yes
+  with_items: network_os_tuning_params
+
+- name: set timezone
+  command: timedatectl set-timezone {{ timezone }}
+  ignore_errors: True

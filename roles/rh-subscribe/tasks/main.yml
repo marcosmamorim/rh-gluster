@@ -1,0 +1,51 @@
+---
+
+- name: Force unregister before register
+  redhat_subscription:
+    state: absent
+  when: use_rhel
+  ignore_errors: true
+
+- name: register node with subscription-manager
+  command: subscription-manager register --username="{{ rhel_subscription_user }}" --password="{{ rhel_subscription_pass }}" --force
+  when: use_rhel
+  register: subscription
+  changed_when: false
+
+- name: attach node to subscription pool
+  command: subscription-manager attach --pool {{ item }}
+  with_items: rhel_pool_id
+  when: use_rhel
+
+- name: disable all repos
+  command: subscription-manager repos --disable=*
+  when: use_rhel
+  changed_when: false
+
+- name: enable repos for rhel
+  command: subscription-manager repos --enable  {{ item }}
+  with_items: rhel_repos
+  when: use_rhel
+  changed_when: false
+
+- name: create redhat-support-tool
+  file:
+    dest: /root/.redhat-support-tool/
+    state: directory
+    mode: 0700
+    owner: root
+    group: root
+  when: use_rhel
+
+- name: create redhat support configuration tool
+  template:
+    src: redhat-support-tool.conf
+    dest: /root/.redhat-support-tool/redhat-support-tool.conf
+    mode: 0600
+    owner: root
+    group: root
+  when: use_rhel
+
+- name: upgrade all packages
+  yum: name=* state=latest
+  when: upgrade_packages

@@ -1,0 +1,5 @@
+---
+- hosts: kickstarter
+  gather_facts: True
+  roles:
+    - rh-kickstarter

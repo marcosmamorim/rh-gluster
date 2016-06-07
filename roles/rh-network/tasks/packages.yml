@@ -1,0 +1,13 @@
+---
+
+- name: remove NetworkManager
+  yum:
+    name: NetworkManager
+    state: removed
+
+- name: Install the required  packages
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items: network_packages
+

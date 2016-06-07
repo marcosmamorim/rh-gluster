@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: Marcos Amorim
+  description: Register node on Red Hat Network
+  license: Apache
+  min_ansible_version: 1.7
+  platforms:
+    - name: Red Hat Enterprise 7
+      versions:
+        - 7.2
+  categories:
+    - system

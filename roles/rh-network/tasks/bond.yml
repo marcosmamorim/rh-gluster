@@ -1,0 +1,47 @@
+---
+
+- name: Create the network configuration file for bond devices
+  template:
+    src: bond.j2
+    dest: "{{ net_path }}/ifcfg-{{ item.device }}"
+  with_items: network_bond_interfaces
+  when: network_bond_interfaces is defined
+  register: bond_result
+
+- name: Make sure the bonding module is loaded
+  modprobe:
+    name: bonding
+    state: present
+  when: bond_result|changed
+
+- name: Write configuration files for route configuration
+  template:
+    src: route.j2
+    dest: "{{ net_path }}/route-{{ item.device }}"
+  with_items: network_bond_interfaces
+  when: network_bond_interfaces is defined and item.route is defined
+
+- name: Bringing up bonding interfaces
+  shell: ifdown {{ item.item.device }}; ifup {{ item.item.device }}
+  with_items: bond_result.results
+  when: bond_result is defined and item.changed
+
+- name: Create the network configuration file for slave in the bond devices
+  template:
+    src: bond_slave.j2
+    dest: "{{ net_path }}/ifcfg-{{ item.1 }}"
+  with_subelements:
+   - network_bond_interfaces
+   - bond_slaves
+  when: network_bond_interfaces is defined
+  register: bond_port_result
+
+- name: Bringing up bonding ports interfaces
+  shell: ifdown {{ item.item.1 }}; ifup {{ item.item.1 }}
+  with_items: bond_port_result.results
+  when: bond_port_result is defined and item.changed
+
+- name: Bringing up bonding interfaces
+  shell: ifdown {{ item.item.device }}; ifup {{ item.item.device }}
+  with_items: bond_result.results
+  when: bond_result is defined and item.changed

@@ -1,0 +1,13 @@
+---
+
+use_rhel: false
+rhel_subscription_user: username_access_rhn
+rhel_subscription_pass: password_access_rhn
+rhel_pool_id: redhat_pool_id
+
+rhel_repos:
+  - rhel-7-server-extras-rpms
+  - rhel-ha-for-rhel-7-server-rpms
+  - rhel-7-server-rpms
+  - rhel-7-server-optional-rpms
+  - rhel-7-server-openstack-8-rpms

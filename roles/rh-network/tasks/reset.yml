@@ -1,0 +1,82 @@
+---
+
+- name: remove openvswitch bridges
+  openvswitch_bridge:
+    bridge: "{{ item }}"
+    state: absent
+  with_items:
+    - br-int
+    - br-pnet1
+    - br-ex
+    - br-tun
+  ignore_errors: True
+
+- name: Reset the network configuration file for ethernet devices
+  file:
+    dest: "{{ net_path }}/ifcfg-{{ item.device }}"
+    state: absent
+  with_items: network_ether_interfaces
+  when: network_ether_interfaces is defined and network_ether_interfaces| length > 0
+  ignore_errors: True
+
+- name: Reset configuration files for rhel route configuration
+  file:
+    dest: "{{ net_path }}/route-{{ item.device }}"
+    state: absent
+  with_items: network_ether_interfaces
+  when: network_ether_interfaces is defined and
+        network_ether_interfaces| length > 0 and
+        item.route is defined
+  ignore_errors: True
+
+- name: Reset the network configuration file for bridge devices
+  file:
+    dest: "{{ net_path }}/ifcfg-{{ item.device }}"
+    state: absent
+  with_items: network_bridge_interfaces
+  when: network_bridge_interfaces is defined
+  ignore_errors: True
+
+- name: Write configuration files for rhel route configuration
+  file:
+    dest: "{{ net_path }}/route-{{ item.device }}"
+    state: absent
+  with_items: network_bridge_interfaces
+  when: network_bridge_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
+  ignore_errors: True
+
+- name: Reset the network configuration file for port on the bridge devices
+  file:
+    dest: "{{ net_path }}/ifcfg-{{ item.1 }}"
+    state: absent
+  with_subelements:
+   - network_bridge_interfaces
+   - ports
+  when: network_bridge_interfaces is defined
+  ignore_errors: True
+
+- name: Reset the network configuration file for bond devices
+  file:
+    dest: "{{ net_path }}/ifcfg-{{ item.device }}"
+    state: absent
+  with_items: network_bond_interfaces
+  when: network_bond_interfaces is defined
+  ignore_errors: True
+
+- name: Reset configuration files for route configuration
+  file:
+    dest: "{{ net_path }}/route-{{ item.device }}"
+    state: absent
+  with_items: network_bond_interfaces
+  when: network_bond_interfaces is defined and item.route is defined and ansible_os_family == 'RedHat'
+  ignore_errors: True
+
+- name: Reset the network configuration file for slave in the bond devices
+  file:
+    dest: "{{ net_path }}/ifcfg-{{ item.1 }}"
+    state: absent
+  with_subelements:
+   - network_bond_interfaces
+   - bond_slaves
+  when: network_bond_interfaces is defined
+  ignore_errors: True

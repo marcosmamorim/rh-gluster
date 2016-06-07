@@ -1,0 +1,35 @@
+---
+network_ether_interfaces: []
+network_bridge_interfaces: []
+network_bond_interfaces: []
+
+network_reset: "{{ global_reset }}"
+#Set true to enable firewalld
+network_firewalld: False
+use_openvswitch: True
+
+network_modules:
+    - nf-conntrack
+    - nf_conntrack_ipv4
+    - nf_conntrack_ipv6
+    - nf_conntrack_pptp
+    - ip_conntrack_ftp
+    - ip_gre
+    - ip_nat_ftp
+    - nf_conntrack_proto_gre
+    - nf_nat_proto_gre
+    - vhost_net
+
+network_os_tuning_params:
+  - { name: net.netfilter.nf_conntrack_tcp_timeout_close_wait, value: 30 }
+  - { name: net.netfilter.nf_conntrack_tcp_timeout_fin_wait, value: 60 }
+  - { name: net.netfilter.nf_conntrack_max, value: 524288 }
+
+network_packages:
+  - libselinux-python
+  - bridge-utils
+  - iputils
+  - tcpdump
+  - nmap
+  - telnet
+
