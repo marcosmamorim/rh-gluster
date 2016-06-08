@@ -1,80 +1,84 @@
 # Public interface
-ext_interface: eth1
-pnet_interface: eth3
 mgmt_interface: eth0
 
+# Examples
+
 network_ether_interfaces:
-  # Public API
+  # Management
   - device: eth0
     onboot: yes
-    type: Ethernet
     bootproto: static
-    address: 192.168.122.118
+    address: 192.168.10.18
     netmask: 255.255.255.0
-    gateway: 192.168.122.1
-    dns1: 192.168.122.1
-    dns2: 8.8.8.8
-  # Internal
-  - device: eth2
-    onboot: yes
-    type: Ethernet
-    bootproto: static
-    address: 172.17.0.118
-    netmask: 255.255.255.0
-  # TenantNetwork
-  - device: eth3
-    onboot: yes
-    type: Ethernet
-    bootproto: none
-  # Storage
-  - device: eth4
-    onboot: yes
-    type: Ethernet
-    bootproto: static
-    address: 172.18.0.118
-    netmask: 255.255.255.0
+    gateway: 192.168.10.1
+#    Examples Routes from this interfaces
+#    route:
+#      - network: 192.168.200.0
+#        netmask: 255.255.255.0
+#        gateway: 192.168.10.1
+#      - network: 192.168.100.0
+#        netmask: 255.255.255.0
+#        gateway: 192.168.10.1
 
-#network_bridge_interfaces:
-#  -  device: br-ex
-#     onboot: yes
-#     userctl: "no"
-#     type: OVSIntPort
-#     devicetype: ovs
-#     ovs_bridge: br-ex
-#     address: 172.16.0.118
-#     netmask: 255.255.255.0
-#     bootproto: static
-#     stp: "off"
-#     ports: [eth1]
-
-#  # vxlan
-#  - device: eth3
-#    onboot: True
-#    type: Ethernet
-#    bootproto: static
-#    address: 192.168.100.16
-#    netmask: 255.255.255.0
-
-#  # Internal API
-#  - device: eth1
-#    onboot: yes
-#    type: Ethernet
-#    bootproto: static
-#    address: 172.17.0.16
-#    netmask: 255.255.255.0
-#  # Storage
-#  - device: eth2
-#    onboot: yes
-#    type: Ethernet
-#    bootproto: static
-#    address: 192.168.0.16
-#    netmask: 255.255.255.0
-#  # VXLAN
-
+# Example bonding
 #network_bond_interfaces:
 #  - device: bond0
-#    bootproto: dhcp
+#    onboot: yes
+#    address: 192.168.10.128
+#    netmask: 255.255.255.0
+#    bootproto: static
+#    bond_mode: active-backup
+#    bond_miimon: 100
+#    bond_slaves: [eth1, eth2]
+#  - device: bond1
+#    onboot: yes
+#    address: 192.168.20.128
+#    netmask: 255.255.255.0
+#    bootproto: static
+#    bond_mode: active-backup
+#    bond_miimon: 100
+#    bond_slaves: [eth3, eth4]
+
+# Example bonding lacp
+#network_bond_interfaces:
+#  - device: bond0
+#    onboot: yes
+#    address: 192.168.10.128
+#    netmask: 255.255.255.0
+#    bootproto: static
 #    bond_mode: 802.3ad
 #    bond_miimon: 100
-#    bond_slaves: [eth2, eth3]
+#    bond_slaves: [eth1, eth2]
+#  - device: bond1
+#    onboot: yes
+#    address: 192.168.20.128
+#    netmask: 255.255.255.0
+#    bootproto: static
+#    bond_mode: 802.3ad
+#    bond_miimon: 100
+#    bond_slaves: [eth3, eth4]
+
+#Example OVSBridge Bridge
+#network_bridge_interfaces:
+#  - device: br-ex
+#    onboot: yes
+#    userctl: "no"
+#    type: OVSIntPort
+#    devicetype: ovs
+#    ovs_bridge: br-ex
+#    address: 172.16.0.115
+#    netmask: 255.255.255.0
+#    bootproto: static
+#    stp: "off"
+#    ports: [eth1]
+
+# Example Linux Bridge
+#network_bridge_interfaces:
+#  - device: br1
+#    type: bridge
+#    address: 192.168.10.10
+#    netmask: 255.255.255.0
+#    bootproto: static
+#    stp: "off"
+#    ports: [eth1]
 
