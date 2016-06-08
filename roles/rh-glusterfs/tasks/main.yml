@@ -1,0 +1,12 @@
+---
+- name: include gluster packages
+  include: packages.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: include glusterfs configure server
+  include: configure-server.yml
+  when: glusterfs_volumes
+
+- name: include glusterfs configure client
+  include: configure-client.yml
+  when: glusterfs_mounts

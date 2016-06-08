@@ -1,8 +1,11 @@
-# Public interface
+---
+
+# Management  interface
 mgmt_interface: eth0
+glusterfs_install_server: True
+glusterfs_install_client: False
 
 # Examples
-
 network_ether_interfaces:
   # Management
   - device: eth0
@@ -20,11 +23,25 @@ network_ether_interfaces:
 #        netmask: 255.255.255.0
 #        gateway: 192.168.10.1
 
+# Example bond and VLAN tagged use the same example to ethernet interface
+#  - device: bond0.100
+#    onboot: yes
+#    bootproto: static
+#    address: 192.168.12.251
+#    netmask: 255.255.255.0
+#    vlan: True
+#  - device: bond1.200
+#    onboot: yes
+#    bootproto: static
+#    address: 192.168.32.251
+#    netmask: 255.255.255.0
+#    vlan: True
+
 # Example bonding
 #network_bond_interfaces:
 #  - device: bond0
-#    onboot: yes
-#    address: 192.168.10.128
+#    onboot: "yes"
+#    address: 192.168.10.251
 #    netmask: 255.255.255.0
 #    bootproto: static
 #    bond_mode: active-backup
@@ -32,7 +49,7 @@ network_ether_interfaces:
 #    bond_slaves: [eth1, eth2]
 #  - device: bond1
 #    onboot: yes
-#    address: 192.168.20.128
+#    address: 192.168.20.251
 #    netmask: 255.255.255.0
 #    bootproto: static
 #    bond_mode: active-backup

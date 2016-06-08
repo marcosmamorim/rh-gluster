@@ -1,0 +1,19 @@
+---
+
+- name: Ensure GlusterFS client is installed | Redhat
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - glusterfs-cli
+    - glusterfs-client-xlators
+    - glusterfs-fuse
+  when: 'glusterfs_install_client == True'
+
+- name: Ensure GlusterFS server is installed | Redhat
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - glusterfs
+  when: 'glusterfs_install_server == True'

@@ -2,6 +2,9 @@
 gluster01 ansible_ssh_host=192.168.122.251
 #gluster02 ansible_ssh_host=192.168.122.116
 
+[gluster_clients]
+gclient01 ansible_ssh_host=192.168.122.251
+
 [kickstarter]
 kickstarter ansible_ssh_host=192.168.122.1
 

@@ -1,0 +1,3 @@
+---
+glusterfs_install_server: False
+glusterfs_install_client: True

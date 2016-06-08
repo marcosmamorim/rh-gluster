@@ -1,0 +1,4 @@
+- hosts: gluster_clients
+  gather_facts: True
+  roles:
+    - rh-glusterfs

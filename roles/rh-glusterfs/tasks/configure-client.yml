@@ -1,0 +1,21 @@
+---
+
+- name: Ensure GlusterFS mount directories exist
+  file:
+    path: '{{ item.mount_dir }}'
+    state: directory
+    owner: '{{ item.owner|default("root") }}'
+    group: '{{ item.group|default("root") }}'
+    mode: '{{ item.mode|default("0755") }}'
+  with_items:
+    - '{{ glusterfs_mounts }}'
+
+- name: Ensure GlusterFS volumes are mounted
+  mount:
+    name: '{{ item.mount_dir }}'
+    src: '{{ item.volume }}'
+    fstype: glusterfs
+    opts: '{{ item.options|default("defaults,_netdev") }}'
+    state: mounted
+  with_items:
+    - '{{ glusterfs_mounts }}'
