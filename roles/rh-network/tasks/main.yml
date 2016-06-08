@@ -34,7 +34,7 @@
     name: firewalld
     state: stopped
     enabled: no
-  when: network_firewalld
+  when: disable_firewalld
 
 - name: restart network
   service:

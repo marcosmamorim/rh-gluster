@@ -11,16 +11,24 @@ mgmt_interface: eth0
 
 internal_ip: "{{ hostvars[inventory_hostname][ 'ansible_' + mgmt_interface ].ipv4.address }}"
 
-dns_domain: openstack.local
 timezone: "America/Sao_Paulo"
-dns_searchs: openstack.local
+
+dns_domain: openstack.local
+
+# DNS Name searchs
+dns_searchs:
+  - openstack.local
+
+# Name servers
 dns_nameservers:
-  - 8.8.8.8
+  - 192.168.122.1
   - 4.4.4.4
 
+# Reset network configuration
 network_reset: True
-#Set true to enable firewalld
-network_firewalld: False
+
+#Set true to disable firewalld
+disable_firewalld: True
 
 network_modules:
     - nf-conntrack

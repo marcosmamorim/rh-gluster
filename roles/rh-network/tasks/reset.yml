@@ -1,16 +1,5 @@
 ---
 
-- name: remove openvswitch bridges
-  openvswitch_bridge:
-    bridge: "{{ item }}"
-    state: absent
-  with_items:
-    - br-int
-    - br-pnet1
-    - br-ex
-    - br-tun
-  ignore_errors: True
-
 - name: Reset the network configuration file for ethernet devices
   file:
     dest: "{{ net_path }}/ifcfg-{{ item.device }}"
