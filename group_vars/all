@@ -13,7 +13,7 @@ internal_ip: "{{ hostvars[inventory_hostname][ 'ansible_' + mgmt_interface ].ipv
 
 dns_domain: openstack.local
 timezone: "America/Sao_Paulo"
-dns_searchs: redhat.com
+dns_searchs: openstack.local
 dns_nameservers:
   - 8.8.8.8
   - 4.4.4.4

@@ -8,9 +8,9 @@ network_ether_interfaces:
   - device: eth0
     onboot: yes
     bootproto: static
-    address: 192.168.10.18
+    address: 192.168.122.251
     netmask: 255.255.255.0
-    gateway: 192.168.10.1
+    gateway: 192.168.122.1
 #    Examples Routes from this interfaces
 #    route:
 #      - network: 192.168.200.0
