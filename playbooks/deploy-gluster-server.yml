@@ -1,4 +1,6 @@
 - hosts: gluster
   gather_facts: True
   roles:
+    - rh-subscribe
+    - rh-network
     - rh-glusterfs

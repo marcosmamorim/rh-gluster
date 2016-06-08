@@ -1,5 +1,7 @@
 # Public interface
 mgmt_interface: eth0
+glusterfs_install_server: True
+glusterfs_install_client: False
 
 # Examples
 
@@ -8,7 +10,7 @@ network_ether_interfaces:
   - device: eth0
     onboot: yes
     bootproto: static
-    address: 192.168.10.19
+    address: 192.168.122.231
     netmask: 255.255.255.0
     gateway: 192.168.10.1
 #    Examples Routes from this interfaces

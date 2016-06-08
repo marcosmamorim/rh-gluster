@@ -1,6 +1,12 @@
 [gluster]
-gluster01 ansible_ssh_host=192.168.122.251
-#gluster02 ansible_ssh_host=192.168.122.116
+gluster01 ansible_ssh_host=192.168.122.230
+gluster02 ansible_ssh_host=192.168.122.231
+
+[gluster_quorum]
+gluster_quorum ansible_ssh_host=192.168.122.232
+
+[glusterconsole]
+glusterconsole01 ansible_ssh_host=192.168.122.233
 
 [gluster_clients]
 gclient01 ansible_ssh_host=192.168.122.251
