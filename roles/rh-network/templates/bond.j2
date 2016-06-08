@@ -1,13 +1,19 @@
-
-{% if item.bootproto == 'static' %}
 DEVICE={{ item.device }}
 USERCTL=no
-BOOTPROTO=none
-{% if item.address is defined %}
-IPADDR={{ item.address }}
+{% if item.bootproto == 'static' %}
+BOOTPROTO=static
+{% endif %}
+{% if item.bootproto == 'dhcp' %}
+BOOTPROTO=dhcp
+{% endif %}
+{%if item.type is defined %}
+TYPE={{ item.type }}
 {% endif %}
 {% if item.onboot is defined %}
-ONBOOT={{ item.onboot|default("yes") }}
+ONBOOT={{ item.onboot }}
+{% endif %}
+{% if item.address is defined %}
+IPADDR={{ item.address }}
 {% endif %}
 {% if item.netmask is defined %}
 NETMASK={{ item.netmask }}
@@ -15,13 +21,13 @@ NETMASK={{ item.netmask }}
 {% if item.gateway is defined %}
 GATEWAY={{ item.gateway }}
 {% endif %}
-BONDING_OPTS="mode={{ item.bond_mode }} miimon={{ item.bond_miimon|default(100) }} "
+{% if item.vlan is defined %}
+VLAN=yes
 {% endif %}
-
-{% if item.bootproto == 'dhcp' %}
-DEVICE={{ item.device }}
-BONDING_OPTS="mode={{ item.bond_mode }} miimon={{ item.bond_miimon|default(100) }} "
-USERCTL=no
-ONBOOT={{ item.onboot|default("yes") }}
-BOOTPROTO=dhcp
+{% if item.dns1 is defined %}
+DNS1={{ item.dns1 }}
 {% endif %}
+{% if item.dns2 is defined %}
+DNS2={{ item.dns2 }}
+{% endif %}
+BONDING_OPTS="mode={{ item.bond_mode|default('active-backup') }} miimon={{ item.bond_miimon|default(100) }}"

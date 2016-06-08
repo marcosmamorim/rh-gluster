@@ -1,6 +1,6 @@
 DEVICE={{ item.device }}
 {% if item.bootproto == 'static' %}
-BOOTPROTO=none
+BOOTPROTO=static
 {% endif %}
 {% if item.bootproto == 'dhcp' %}
 BOOTPROTO=dhcp
@@ -21,7 +21,7 @@ NETMASK={{ item.netmask }}
 GATEWAY={{ item.gateway }}
 {% endif %}
 {% if item.vlan is defined %}
-VLAN={{ item.vlan }}
+VLAN=yes
 {% endif %}
 {% if item.dns1 is defined %}
 DNS1={{ item.dns1 }}
