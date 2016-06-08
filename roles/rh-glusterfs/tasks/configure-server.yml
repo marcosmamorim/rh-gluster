@@ -1,10 +1,10 @@
 ---
 
-#- name: Ensure GlusterFS server is started and enabled at boot
-#  service:
-#    name: '{{ glusterfs_daemon }}'
-#    state: started
-#    enabled: yes
+- name: Ensure GlusterFS server is started and enabled at boot
+  service:
+    name: glusterd
+    state: started
+    enabled: yes
 
 - name: Ensure Brick directories exist
   file:

@@ -3,16 +3,16 @@
 # Upgrade all packages
 upgrade_packages: True
 
-#glusterfs_volumes:
-#  - name: www-data
-#    cluster: ['{{ ansible_fqdn }}']
-#    host: '{{ ansible_fqdn }}'
-#    options:
-#      nfs.disable: 'on'
-#      auth.allow: '10.10.20.*'
-#    force: True
-#    bricks:
-#      - /gluster-exports/www-data
+glusterfs_volumes:
+  - name: www-data
+    cluster: ['{{ ansible_fqdn }}']
+    host: '{{ ansible_fqdn }}'
+    options:
+      nfs.disable: 'on'
+      auth.allow: '192.168.122.*'
+    force: True
+    bricks:
+      - /gluster-exports/www-data
 #
 #glusterfs_mounts:
 #  - mount_dir: '/var/www'
@@ -106,6 +106,14 @@ rhel_repos:
   - rhel-ha-for-rhel-7-server-rpms
   - rhel-7-server-rpms
   - rhel-7-server-optional-rpms
+  - rh-gluster-3-nfs-for-rhel-7-server-rpms
+  - rh-gluster-3-splunk-for-rhel-7-server-rpms
+  - rh-gluster-3-console-for-rhel-7-server-rpms
+  - rh-gluster-3-big-data-for-rhel-7-server-rpms
+  - rh-gluster-3-for-rhel-7-server-files
+  - rh-gluster-3-samba-for-rhel-7-server-rpms
+  - rh-gluster-3-client-for-rhel-7-server-rpms
+
 
 ################################################
 ## Kickstart server

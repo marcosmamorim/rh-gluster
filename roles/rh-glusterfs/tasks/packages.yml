@@ -8,7 +8,7 @@
     - glusterfs-cli
     - glusterfs-client-xlators
     - glusterfs-fuse
-  when: 'glusterfs_install_client == True'
+  when: glusterfs_install_client
 
 - name: Ensure GlusterFS server is installed | Redhat
   yum:
@@ -16,4 +16,5 @@
     state: installed
   with_items:
     - glusterfs
-  when: 'glusterfs_install_server == True'
+    - glusterfs-server
+  when: glusterfs_install_server
