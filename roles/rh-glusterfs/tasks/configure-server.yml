@@ -19,6 +19,8 @@
 - debug: var=gluster_status
   when: gluster_status is defined
 
+- debug: var=galera_master
+
 - name: Create GlusterFS volumes
   gluster_volume:
     name: "{{ item.name }}"

@@ -28,7 +28,7 @@ dns_nameservers:
 network_reset: True
 
 #Set true to disable firewalld
-disable_firewalld: True
+disable_firewalld: False
 
 network_modules:
     - nf-conntrack
@@ -84,6 +84,7 @@ network_packages:
   - tcpdump
   - nmap
   - telnet
+  - net-utils
 
 ################################################
 ## Red Hat Subscribe
@@ -125,7 +126,8 @@ kernel_boot_options: "net.ifnames=0"
 ## Gluster LVM
 reset_lvm: True
 gluster_master: "{{ group[gluster]|first }}"
-
+glusterfs_install_server: True
+glusterfs_install_client: False
 gluster_members:
   - gluster02
 

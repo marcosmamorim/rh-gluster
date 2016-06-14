@@ -28,7 +28,7 @@
     - 32803/udp
     - 662/tcp
     - 662/udp
-  when: glusterfs_install_client
+  when: glusterfs_install_server
 
 - name: CLIENT - set firewalld rule to gluster ports
   firewalld:
