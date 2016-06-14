@@ -6,32 +6,30 @@
     state: started
     enabled: yes
 
-- name: Ensure Brick directories exist
-  file:
-    path: '{{ item.1 }}'
-    state: directory
-    # Need to find a way to default to a omit the owner / group when undefined.
-    # owner: '{{ item.0.owner|default(None) }}'
-    # group: '{{ item.0.group|default(None) }}'
-  with_subelements:
-    - glusterfs_volumes
-    - bricks
+# TODO: Tem que melhorar isso
+- name: create gluster cluster
+  command: gluster probe {{ item }}
+  with_items: gluster_members
+  when: inventory_hostname == gluster_master
 
-- name: Create GlusterFS volumes
-  gluster_volume:
-    name: "{{ item.name }}"
-    cluster: "{{ item.cluster|default(omit) }}"
-    host: "{{ item.host|default(omit) }}"
-    force: "{{ item.force }}"
-    transport: "{{ item.transport|default('tcp') }}"
-    state: "{{ item.state|default('present') }}"
-    quota: "{{ item.quota|default(omit) }}"
-    start_on_create: "{{ item.start_on_create|default('yes') }}"
-    rebalance: "{{ item.rebalance|default('no') }}"
-    replicas: "{{ item.replicas|default(omit) }}"
-    stripes: "{{ item.stripes|default(omit) }}"
-    options: "{{ item.options|default(omit) }}"
-    brick: '{{ item.bricks | join(",") }}'
-    directory: "{{ item.directory|default(omit) }}"
-  with_items: glusterfs_volumes
-  run_once: true
+- name: debug gluster cluster status
+  command: gluster peer status
+
+#- name: Create GlusterFS volumes
+#  gluster_volume:
+#    name: "{{ item.name }}"
+#    cluster: "{{ item.cluster|default(omit) }}"
+#    host: "{{ item.host|default(omit) }}"
+#    force: "{{ item.force }}"
+#    transport: "{{ item.transport|default('tcp') }}"
+#    state: "{{ item.state|default('present') }}"
+#    quota: "{{ item.quota|default(omit) }}"
+#    start_on_create: "{{ item.start_on_create|default('yes') }}"
+#    rebalance: "{{ item.rebalance|default('no') }}"
+#    replicas: "{{ item.replicas|default(omit) }}"
+#    stripes: "{{ item.stripes|default(omit) }}"
+#    options: "{{ item.options|default(omit) }}"
+#    brick: '{{ item.bricks | join(",") }}'
+#    directory: "{{ item.directory|default(omit) }}"
+#  with_items: glusterfs_volumes
+#  run_once: true

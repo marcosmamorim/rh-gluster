@@ -3,4 +3,5 @@
   roles:
     - rh-subscribe
     - rh-network
+    - rh-lvm
     - rh-glusterfs

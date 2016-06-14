@@ -103,15 +103,12 @@ rhel_pool_id: redhat_pool_id
 
 # Register repos
 rhel_repos:
-  - rhel-7-server-extras-rpms
-  - rhel-ha-for-rhel-7-server-rpms
   - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
   - rhel-7-server-optional-rpms
-  - rh-gluster-3-nfs-for-rhel-7-server-rpms
-  - rh-gluster-3-splunk-for-rhel-7-server-rpms
-  - rh-gluster-3-console-for-rhel-7-server-rpms
-  - rh-gluster-3-big-data-for-rhel-7-server-rpms
+  - rh-gluster-3-for-rhel-7-server-rpms
   - rh-gluster-3-for-rhel-7-server-files
+  - rh-gluster-3-nfs-for-rhel-7-server-rpms
   - rh-gluster-3-samba-for-rhel-7-server-rpms
   - rh-gluster-3-client-for-rhel-7-server-rpms
 
@@ -128,6 +125,10 @@ kernel_boot_options: "net.ifnames=0"
 ################################################
 ## Gluster LVM
 reset_lvm: True
+gluster_master: {{ group[gluster]|first }}
+
+gluster_members:
+  - gluster02
 
 # For JBOD, use an alignment value of 256K.
 # In case of hardware RAID, the alignment_value should be obtained by multiplying the RAID stripe unit size with
@@ -153,6 +154,25 @@ gluster_bricks:
     virtualsize: 100G
     vg_name: vg1
     thin_name: tp1
+
+glusterfs_volumes:
+  - name: www-data
+    cluster: ['{{ ansible_fqdn }}']
+    host: '{{ ansible_fqdn }}'
+    replicas: 2
+    options:
+      nfs.disable: 'on'
+      auth.allow: '10.10.20.*'
+    force: True
+    bricks:
+      - /gluster-exports/www-data
+
+glusterfs_mounts:
+  - mount_dir: '/var/www'
+    volume: '{{ ansible_fqdn }}:www-data'
+    owner: 'root' # optional
+    group: 'root' # optional
+    mode: '0755' # optional
 
 use_xfs: True
 mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
