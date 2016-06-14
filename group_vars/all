@@ -125,7 +125,7 @@ kernel_boot_options: "net.ifnames=0"
 ################################################
 ## Gluster LVM
 reset_lvm: True
-gluster_master: {{ group[gluster]|first }}
+gluster_master: "{{ group[gluster]|first }}"
 
 gluster_members:
   - gluster02
@@ -167,12 +167,12 @@ glusterfs_volumes:
     bricks:
       - /gluster-exports/www-data
 
-glusterfs_mounts:
-  - mount_dir: '/var/www'
-    volume: '{{ ansible_fqdn }}:www-data'
-    owner: 'root' # optional
-    group: 'root' # optional
-    mode: '0755' # optional
+#glusterfs_mounts:
+#  - mount_dir: '/var/www'
+#    volume: '{{ ansible_fqdn }}:www-data'
+#    owner: 'root' # optional
+#    group: 'root' # optional
+#    mode: '0755' # optional
 
 use_xfs: True
 mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
