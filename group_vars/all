@@ -127,6 +127,7 @@ kernel_boot_options: "net.ifnames=0"
 
 ################################################
 ## Gluster LVM
+reset_lvm: True
 
 # For JBOD, use an alignment value of 256K.
 # In case of hardware RAID, the alignment_value should be obtained by multiplying the RAID stripe unit size with
@@ -150,7 +151,14 @@ pv_disks:
 gluster_bricks:
   - brick_name: brick1
     virtualsize: 100G
-    vg_name: vg1/tp1
+    vg_name: vg1
+    thin_name: tp1
+
+use_xfs: True
+mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
+mount_options_xfs: noatime,nodiratime,inode64
+mount_point: /rhgs/bricks/
+#mount_options_xfs: noexec,noatime,nodiratime,nodev,inode64,logbsize=256k
 
 ## For JBOD,  size of the metadata device is not necessary.
 #use_jbod: False
@@ -161,4 +169,4 @@ gluster_bricks:
 #raid_data_disks: 10
 #raid_strip_size: 128
 #
-#xfs_mount_options_xfs: noexec,noatime,nodev,inode64,logbsize=256k
+#

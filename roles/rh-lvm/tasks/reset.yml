@@ -1,0 +1,24 @@
+---
+
+- name: umount filesystem
+  command: umount {{ mount_point }}/*
+  ignore_errors: True
+
+- name: remove vgs
+  command: vgremove -f {{ item.vg_name }}
+  with_items: pv_disks
+  ignore_errors: True
+
+- name: remove pvs
+  command: pvremove -ff {{ item.disk }}
+  with_items: pv_disks
+  ignore_errors: True
+
+#
+#umount /rhgs/bricks/*
+#
+#vgremove vg1 -f
+#pvremove /dev/vdb
+#
+#vgremove vg2 -f
+#pvremove /dev/vdc --force
