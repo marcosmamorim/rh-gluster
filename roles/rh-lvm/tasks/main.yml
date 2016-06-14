@@ -3,6 +3,8 @@
 - name: include lvm reset
   include: reset.yml
   when: reset_lvm
+  tags:
+    - reset_lvm
 
 - name: create gluster pv
   command: pvcreate --dataalignment {{item.pv_dataalignment |default('1280')}}K {{ item.disk }}

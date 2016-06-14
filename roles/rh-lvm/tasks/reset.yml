@@ -1,11 +1,17 @@
 ---
 
-- name: umount filesystem
-  command: umount {{ mount_point }}/*
+- name: unmount bricks devices
+  mount:
+    src: "/dev/mapper/{{item.vg_name}}-{{item.brick_name}}"
+    name: "{{ mount_point }}{{ item.brick_name }}"
+    opts: "{{ mount_options_xfs }}"
+    state: absent
+    fstype: xfs
+  with_items: gluster_bricks
   ignore_errors: True
 
 - name: remove vgs
-  command: vgremove -f {{ item.vg_name }}
+  command: vgremove -ff {{ item.vg_name }}
   with_items: pv_disks
   ignore_errors: True
 
@@ -13,12 +19,3 @@
   command: pvremove -ff {{ item.disk }}
   with_items: pv_disks
   ignore_errors: True
-
-#
-#umount /rhgs/bricks/*
-#
-#vgremove vg1 -f
-#pvremove /dev/vdb
-#
-#vgremove vg2 -f
-#pvremove /dev/vdc --force
