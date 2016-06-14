@@ -1,0 +1,64 @@
+---
+
+- name: SERVER - start and enable firewalld service
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: SERVER - set firewalld rule to mountd and high-availability
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: True
+  with_items:
+    - mountd
+    - high-availability
+  when: glusterfs_install_server
+
+- name: SERVER - set firewalld rule to gluster ports
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    permanent: True
+  with_items:
+    - 4501/tcp
+    - 4501/udp
+    - 32803/tcp
+    - 32803/udp
+    - 662/tcp
+    - 662/udp
+  when: glusterfs_install_client
+
+- name: CLIENT - set firewalld rule to gluster ports
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    permanent: True
+  with_items:
+    - 662/tcp
+    - 662/udp
+    - 32803/tcp
+    - 32769/udp
+    - 892/tcp
+    - 892/udp
+  when: glusterfs_install_client
+
+## firewall-cmd --zone=public --add-port=662/tcp --add-port=662/udp \
+#--add-port=32803/tcp --add-port=32769/udp --add-port=892/tcp --add-port=892/udp
+#
+## firewall-cmd --zone=public --add-port=662/tcp --add-port=662/udp \
+#--add-port=32803/tcp --add-port=32769/udp --add-port=892/tcp --add-port=892/udp --permanent
+
+#
+## firewall-cmd --get-active-zones
+#
+## firewall-cmd --zone=public --add-service=mountd --add-service=high-availability
+#
+## firewall-cmd --zone=public --add-service=mountd --add-service=high-availability --permanent
+#
+## firewall-cmd --zone=public --add-port=4501/tcp --add-port=4501/udp \
+#--add-port=32803/tcp --add-port=32803/udp --add-port=662/tcp --add-port=662/udp
+#
+## firewall-cmd --zone=public --add-port=4501/tcp --add-port=4501/udp \
+#--add-port=32803/tcp --add-port=32803/udp --add-port=662/tcp --add-port=662/udp --permanent

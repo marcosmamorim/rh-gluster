@@ -3,10 +3,13 @@
   include: packages.yml
   when: ansible_os_family == 'RedHat'
 
+- name: include gluster firewalld
+  include: firewalld.yml
+
 - name: include glusterfs configure server
   include: configure-server.yml
-  when: glusterfs_volumes
+  when: glusterfs_volumes and glusterfs_install_server
 
 - name: include glusterfs configure client
   include: configure-client.yml
-  when: glusterfs_mounts
+  when: glusterfs_mounts and glusterfs_install_client

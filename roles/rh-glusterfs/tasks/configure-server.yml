@@ -12,8 +12,12 @@
   with_items: gluster_members
   when: inventory_hostname == gluster_master
 
-- name: debug gluster cluster status
+- name: check gluster cluster status
   command: gluster peer status
+  register: gluster_status
+
+- debug: var=gluster_status
+  when: gluster_status is defined
 
 #- name: Create GlusterFS volumes
 #  gluster_volume:
