@@ -1,0 +1,23 @@
+---
+
+- name: create gluster pv
+  command: pvcreate --dataalignment {{item.pv_dataalignment |default('128')}}K {{ item.disk }}
+  with_items: pv_disks
+
+- name: create gluster vg
+  command: vgcreate --physicalextentsize {{ item.vg_extentsize }}K {{ item.vg_name }} {{ item.disk }}
+  with_items: pv_disks
+
+- name: create thin provisioning pool
+  command: lvcreate --thinpool {{item.vg_name}}/{{item.thin_name}} --chunksize {{item.vg_chunk}}K --poolmetadatasize {{item.lv_metadatasize}}
+  with_items: pv_disks
+
+- name: create gluster bricks
+  command: lvcreate --thin --name {{ item.brick_name }} --virtualsize {{ item.virtualsize }} {{ item.vg_name }}
+  with_items: gluster_bricks
+#
+#lvextend vg1/tp1 --extents 100%VG
+#lvextend vg2/tp2 --extents 100%VG
+#
+#
+#mkfs.xfs -f -i size=512 -n size=8192 -d su=128k,sw=1 /dev/mapper/vg1-brick1
