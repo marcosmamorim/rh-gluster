@@ -19,21 +19,22 @@
 - debug: var=gluster_status
   when: gluster_status is defined
 
-#- name: Create GlusterFS volumes
-#  gluster_volume:
-#    name: "{{ item.name }}"
-#    cluster: "{{ item.cluster|default(omit) }}"
-#    host: "{{ item.host|default(omit) }}"
+- name: Create GlusterFS volumes
+  gluster_volume:
+    name: "{{ item.name }}"
+    replicas: "{{ item.replicas|default(omit) }}"
+    cluster: "{{ item.cluster|default(omit) }}"
+    start_on_create: "{{ item.start_on_create|default('yes') }}"
+    brick: '{{ item.bricks | join(",") }}'
+    state: "{{ item.state|default('present') }}"
 #    force: "{{ item.force }}"
+#    host: "{{ item.host|default(omit) }}"
 #    transport: "{{ item.transport|default('tcp') }}"
-#    state: "{{ item.state|default('present') }}"
 #    quota: "{{ item.quota|default(omit) }}"
-#    start_on_create: "{{ item.start_on_create|default('yes') }}"
 #    rebalance: "{{ item.rebalance|default('no') }}"
-#    replicas: "{{ item.replicas|default(omit) }}"
 #    stripes: "{{ item.stripes|default(omit) }}"
 #    options: "{{ item.options|default(omit) }}"
-#    brick: '{{ item.bricks | join(",") }}'
 #    directory: "{{ item.directory|default(omit) }}"
-#  with_items: glusterfs_volumes
-#  run_once: true
+  with_items: glusterfs_volumes
+  when: inventory_hostname == gluster_master
+  run_once: true

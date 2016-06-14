@@ -112,7 +112,6 @@ rhel_repos:
   - rh-gluster-3-samba-for-rhel-7-server-rpms
   - rh-gluster-3-client-for-rhel-7-server-rpms
 
-
 ################################################
 ## Kickstart server
 
@@ -148,24 +147,37 @@ pv_disks:
     vg_extentsize: 128
     lv_chunk: 1280
     lv_metadatasize: 16G
+  - vg_name: vg2
+    thin_name: tp2
+    disk: /dev/vdc
+    pv_dataalignment: 1280
+    vg_extentsize: 128
+    lv_chunk: 1280
+    lv_metadatasize: 16G
 
 gluster_bricks:
   - brick_name: brick1
     virtualsize: 100G
     vg_name: vg1
     thin_name: tp1
+  - brick_name: brick2
+    virtualsize: 100G
+    vg_name: vg2
+    thin_name: tp2
 
 glusterfs_volumes:
-  - name: www-data
-    cluster: ['{{ ansible_fqdn }}']
-    host: '{{ ansible_fqdn }}'
+  - name: GloboTeste
+    cluster: ['gluster01', 'gluster02']
     replicas: 2
-    options:
-      nfs.disable: 'on'
-      auth.allow: '10.10.20.*'
+    start_on_create: yes
     force: True
     bricks:
-      - /gluster-exports/www-data
+      - "{{ mount_point }}brick1/GloboTeste"
+      - "{{ mount_point }}brick2/GloboTeste"
+#    options:
+#      nfs.disable: 'on'
+#      auth.allow: '10.10.20.*'
+#    host: '{{ ansible_fqdn }}'
 
 #glusterfs_mounts:
 #  - mount_dir: '/var/www'
