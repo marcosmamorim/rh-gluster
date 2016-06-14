@@ -84,7 +84,6 @@ network_packages:
   - tcpdump
   - nmap
   - telnet
-  - net-utils
 
 ################################################
 ## Red Hat Subscribe
@@ -125,7 +124,7 @@ kernel_boot_options: "net.ifnames=0"
 ################################################
 ## Gluster LVM
 reset_lvm: True
-gluster_master: "{{ group[gluster]|first }}"
+gluster_group_name: gluster
 glusterfs_install_server: True
 glusterfs_install_client: False
 gluster_members:

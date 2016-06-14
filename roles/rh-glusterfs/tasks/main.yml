@@ -3,6 +3,13 @@
   include: packages.yml
   when: ansible_os_family == 'RedHat'
 
+- name: set_fact gluster_master
+  set_fact:
+    gluster_master: '{{hostvars[groups[gluster_group_name][0]].ansible_hostname}}'
+  run_once: True
+  tags:
+    - setfact
+
 - name: include gluster firewalld
   include: firewalld.yml
 
