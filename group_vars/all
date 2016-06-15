@@ -166,6 +166,7 @@ gluster_bricks:
     vg_name: vg2
     thin_name: tp2
 
+# TODO: Create method to get bricks mount dynamic
 glusterfs_volumes:
   - name: GloboTeste
     owner: root

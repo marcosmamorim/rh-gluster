@@ -17,6 +17,22 @@
   command: gluster peer status
   register: gluster_status
 
+#- name: set fact bricks path
+#  set_fact:
+#    bricks_items: "{{mount_point}}{{ item.brick_name }}"
+#  with_items: gluster_bricks
+#  register: bricks_result
+#  tags: bricks_list
+#
+#- name: make a list
+#  set_fact:
+#    bricks_paths: "{{ bricks_result.results | map(attribute='ansible_facts.bricks_items') | list }}"
+#  with_items: bricks_result
+#  tags: bricks_list
+#
+#- debug: var=bricks_paths
+#  tags: bricks_list
+
 - name: create gluster volume
   glusterfs_volumes:
     state: present

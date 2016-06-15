@@ -10,4 +10,3 @@ glusterfs_volumes: []
 glusterfs_mounts: []
 
 glusterfs_daemon: glusterd
-
