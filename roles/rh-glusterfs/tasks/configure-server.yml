@@ -19,7 +19,7 @@
   command: gluster peer probe {{ item }}.{{dns_domain}}
   with_items:
     - "{{ (groups[glusterfs_server_group]|difference([inventory_hostname])) }}"
-  delegate_to: gluster_master
+  when: inventory_hostname == gluster_master
   ignore_errors: True
 
 - name: check gluster cluster status
@@ -51,6 +51,6 @@
     replicas: "{{ item.replicas }}"
     cluster: "{% for host in groups[glusterfs_server_group] %}{{ host }}.{{dns_domain}}{% if not loop.last %},{% endif %}{% endfor %}"
   with_items: glusterfs_volumes
-  delegate_to: gluster_master
+  when: inventory_hostname == gluster_master
   tags:
     - create_volumes
