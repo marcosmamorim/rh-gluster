@@ -26,7 +26,6 @@
     cluster: "{% for host in groups[gluster_group_name] %}{{ host }}.{{dns_domain}}{% if not loop.last %},{% endif %}{% endfor %}"
   with_items:
     - glusterfs_volumes
-    -
   when: inventory_hostname == gluster_master
   tags:
     - create_volumes
