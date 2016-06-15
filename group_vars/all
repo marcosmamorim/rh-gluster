@@ -168,17 +168,12 @@ gluster_bricks:
 
 glusterfs_volumes:
   - name: GloboTeste
-    cluster: ['gluster01', 'gluster02']
+    owner: root
+    group: root
     replicas: 2
-    start_on_create: yes
-    force: True
-    bricks:
-      - "{{ mount_point }}brick1/GloboTeste"
-      - "{{ mount_point }}brick2/GloboTeste"
-#    options:
-#      nfs.disable: 'on'
-#      auth.allow: '10.10.20.*'
-#    host: '{{ ansible_fqdn }}'
+    brick:
+      - "{{ mount_point }}brick1"
+      - "{{ mount_point }}brick2"
 
 #glusterfs_mounts:
 #  - mount_dir: '/var/www'

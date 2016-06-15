@@ -9,6 +9,7 @@
   run_once: True
   tags:
     - setfact
+    - create_volumes
 
 - name: include gluster firewalld
   include: firewalld.yml

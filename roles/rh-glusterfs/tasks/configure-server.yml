@@ -6,37 +6,27 @@
     state: started
     enabled: yes
 
-# TODO: Tem que melhorar isso
 - name: create gluster cluster
-  command: gluster probe {{ item }}
-  with_items: gluster_members
+  command: gluster peer probe {{ item }}.{{dns_domain}}
+  with_items:
+    - "{{ (groups[gluster_group_name]|difference([inventory_hostname])) }}"
   when: inventory_hostname == gluster_master
+  ignore_errors: True
 
 - name: check gluster cluster status
   command: gluster peer status
   register: gluster_status
 
-- debug: var=gluster_status
-  when: gluster_status is defined
-
-- debug: var=galera_master
-
-- name: Create GlusterFS volumes
-  gluster_volume:
+- name: create gluster volume
+  glusterfs_volume:
+    state: present
     name: "{{ item.name }}"
-    replicas: "{{ item.replicas|default(omit) }}"
-    cluster: "{{ item.cluster|default(omit) }}"
-    start_on_create: "{{ item.start_on_create|default('yes') }}"
-    brick: '{{ item.bricks | join(",") }}'
-    state: "{{ item.state|default('present') }}"
-#    force: "{{ item.force }}"
-#    host: "{{ item.host|default(omit) }}"
-#    transport: "{{ item.transport|default('tcp') }}"
-#    quota: "{{ item.quota|default(omit) }}"
-#    rebalance: "{{ item.rebalance|default('no') }}"
-#    stripes: "{{ item.stripes|default(omit) }}"
-#    options: "{{ item.options|default(omit) }}"
-#    directory: "{{ item.directory|default(omit) }}"
-  with_items: glusterfs_volumes
+    brick: "{{ item.brick |join(',')}}"
+    replicas: "{{ item.replicas }}"
+    cluster: "{% for host in groups[gluster_group_name] %}{{ host }}.{{dns_domain}}{% if not loop.last %},{% endif %}{% endfor %}"
+  with_items:
+    - glusterfs_volumes
+    -
   when: inventory_hostname == gluster_master
-  run_once: true
+  tags:
+    - create_volumes
