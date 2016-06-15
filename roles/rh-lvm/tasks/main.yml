@@ -2,29 +2,34 @@
 
 - name: include lvm reset
   include: reset.yml
-  when: reset_lvm
+  when: reset_lvm and inventory_hostname not in groups[glusterfs_arbiter_group]
   tags:
     - reset_lvm
 
 - name: create gluster pv
   command: pvcreate --dataalignment {{item.pv_dataalignment |default('1280')}}K {{ item.disk }}
   with_items: pv_disks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: create gluster vg
   command: vgcreate --physicalextentsize {{ item.vg_extentsize }}K {{ item.vg_name }} {{ item.disk }}
   with_items: pv_disks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: create thin provisioning pool
   command: lvcreate --thinpool {{item.vg_name}}/{{item.thin_name}} --size 5M --chunksize {{item.lv_chunk}}K --poolmetadatasize {{item.lv_metadatasize}}
   with_items: pv_disks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: extend thin pool
   command: lvextend {{item.vg_name}}/{{item.thin_name}} --extents 100%VG
   with_items: pv_disks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: create gluster bricks
   command: lvcreate --thin --name {{ item.brick_name }} --virtualsize {{ item.virtualsize }} {{ item.vg_name }}/{{item.thin_name}}
   with_items: gluster_bricks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: format logical volumes
   filesystem:
@@ -33,6 +38,7 @@
     fstype: xfs
     opts: "{{ mkfs_options_xfs }}"
   with_items: gluster_bricks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
 - name: mount bricks devices
   mount:
@@ -42,5 +48,8 @@
     opts: "{{ mount_options_xfs }}"
     state: mounted
   with_items: gluster_bricks
+  when: inventory_hostname not in groups[glusterfs_arbiter_group]
+
+
 
 #mkfs.xfs -f -i size=512 -n size=8192 -d su=128k,sw=1 /dev/mapper/vg1-brick1

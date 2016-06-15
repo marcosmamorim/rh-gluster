@@ -1,4 +1,4 @@
-- hosts: gluster_quorum
+- hosts: gluster_arbiter
   gather_facts: True
   roles:
     - rh-subscribe

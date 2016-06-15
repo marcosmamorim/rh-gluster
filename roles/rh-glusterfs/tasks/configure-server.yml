@@ -6,11 +6,20 @@
     state: started
     enabled: yes
 
+- name: create bricks on arbiters
+  file:
+    path: "{{ mount_point }}{{ item.brick_name }}"
+    owner: root
+    group: root
+    state: directory
+  with_items: gluster_bricks
+  when: inventory_hostname in groups[glusterfs_arbiter_group]
+
 - name: create gluster cluster
   command: gluster peer probe {{ item }}.{{dns_domain}}
   with_items:
-    - "{{ (groups[gluster_group_name]|difference([inventory_hostname])) }}"
-  when: inventory_hostname == gluster_master
+    - "{{ (groups[glusterfs_server_group]|difference([inventory_hostname])) }}"
+  delegate_to: gluster_master
   ignore_errors: True
 
 - name: check gluster cluster status
@@ -40,8 +49,8 @@
     brick: "{{ item.brick |join(',')}}"
     force: "{{ item.force|default('False') }}"
     replicas: "{{ item.replicas }}"
-    cluster: "{% for host in groups[gluster_group_name] %}{{ host }}.{{dns_domain}}{% if not loop.last %},{% endif %}{% endfor %}"
+    cluster: "{% for host in groups[glusterfs_server_group] %}{{ host }}.{{dns_domain}}{% if not loop.last %},{% endif %}{% endfor %}"
   with_items: glusterfs_volumes
-  when: inventory_hostname == gluster_master
+  delegate_to: gluster_master
   tags:
     - create_volumes

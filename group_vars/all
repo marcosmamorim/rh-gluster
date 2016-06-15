@@ -125,6 +125,9 @@ kernel_boot_options: "net.ifnames=0"
 ## Gluster LVM
 reset_lvm: True
 gluster_group_name: gluster
+glusterfs_server_group: gluster
+glusterfs_arbiter_group: gluster_arbiter
+
 glusterfs_install_server: True
 glusterfs_install_client: False
 gluster_members:
