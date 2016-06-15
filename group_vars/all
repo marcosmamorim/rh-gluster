@@ -171,6 +171,7 @@ glusterfs_volumes:
     owner: root
     group: root
     replicas: 2
+    force: True
     brick:
       - "{{ mount_point }}brick1"
       - "{{ mount_point }}brick2"

@@ -269,7 +269,7 @@ def create_volume(name, stripe, replica, transport, hosts, bricks, force):
     args.append(transport)
     for brick in bricks:
         for host in hosts:
-            args.append(('%s:%s' % (host, brick)))
+            args.append(('%s:%s/%s' % (host, brick, name)))
     if force:
         args.append('force')
     run_gluster(args)
@@ -385,7 +385,7 @@ def main():
             all_bricks = []
             for node in cluster:
                 for brick_path in brick_paths:
-                    brick = '%s:%s:%s' % (node, brick_path, volume_name)
+                    brick = '%s:%s/%s' % (node, brick_path, volume_name)
                     all_bricks.append(brick)
                     if brick not in volumes[volume_name]['bricks']:
                         new_bricks.append(brick)
