@@ -13,6 +13,7 @@
 
 - name: include gluster firewalld
   include: firewalld.yml
+  when: not disable_firewalld
 
 - name: include glusterfs configure server
   include: configure-server.yml
