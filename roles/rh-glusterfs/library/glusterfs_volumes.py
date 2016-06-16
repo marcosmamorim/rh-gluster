@@ -256,7 +256,7 @@ def probe_all_peers(hosts, peers, myhostname):
             if myhostname != host:
                 probe(host)
 
-def create_volume(name, stripe, replica, transport, hosts, bricks, force):
+def create_volume(name, stripe, replica, arbiter, transport, hosts, bricks, force):
     args = [ 'volume', 'create' ]
     args.append(name)
     if stripe:
@@ -264,6 +264,9 @@ def create_volume(name, stripe, replica, transport, hosts, bricks, force):
         args.append(str(stripe))
     if replica:
         args.append('replica')
+        args.append(str(replica))
+    if arbiter:
+        args.append('arbiter')
         args.append(str(replica))
     args.append('transport')
     args.append(transport)
@@ -311,6 +314,7 @@ def main():
             host=dict(required=False, default=None),
             stripes=dict(required=False, default=None, type='int'),
             replicas=dict(required=False, default=None, type='int'),
+            arbiter=dict(required=False, default=None, type='int'),
             transport=dict(required=False, default='tcp', choices=[ 'tcp', 'rdma', 'tcp,rdma' ]),
             brick=dict(required=False, default=None),
             start_on_create=dict(required=False, default=True, type='bool'),
@@ -333,6 +337,7 @@ def main():
     brick_paths = module.params['brick']
     stripes = module.params['stripes']
     replicas = module.params['replicas']
+    arbiter = module.params['arbiter']
     transport = module.params['transport']
     myhostname = module.params['host']
     start_on_create = module.boolean(module.params['start_on_create'])
@@ -370,7 +375,7 @@ def main():
 
         # create if it doesn't exist
         if volume_name not in volumes:
-            create_volume(volume_name, stripes, replicas, transport, cluster, brick_paths, force)
+            create_volume(volume_name, stripes, replicas, arbiter, transport, cluster, brick_paths, force)
             volumes = get_volumes()
             changed = True
 
