@@ -1,18 +1,18 @@
 # Public interface
-mgmt_interface: eth0
+mgmt_interface: bond0
 glusterfs_install_server: True
 glusterfs_install_client: False
 
 # Examples
 
-network_ether_interfaces:
-  # Management
-  - device: eth0
-    onboot: yes
-    bootproto: static
-    address: 192.168.122.27
-    netmask: 255.255.255.0
-    gateway: 192.168.10.1
+#network_ether_interfaces:
+#  # Management
+#  - device: eth0
+#    onboot: yes
+#    bootproto: static
+#    address: 192.168.122.27
+#    netmask: 255.255.255.0
+#    gateway: 192.168.10.1
 #    Examples Routes from this interfaces
 #    route:
 #      - network: 192.168.200.0
@@ -23,23 +23,26 @@ network_ether_interfaces:
 #        gateway: 192.168.10.1
 
 # Example bonding
-#network_bond_interfaces:
-#  - device: bond0
-#    onboot: yes
-#    address: 192.168.10.128
-#    netmask: 255.255.255.0
-#    bootproto: static
-#    bond_mode: active-backup
-#    bond_miimon: 100
-#    bond_slaves: [eth1, eth2]
-#  - device: bond1
-#    onboot: yes
-#    address: 192.168.20.128
-#    netmask: 255.255.255.0
-#    bootproto: static
-#    bond_mode: active-backup
-#    bond_miimon: 100
-#    bond_slaves: [eth3, eth4]
+network_bond_interfaces:
+  - device: bond0
+    onboot: yes
+    address: 10.62.4.11
+    netmask: 255.255.255.192
+    gateway: 10.62.4.1
+    mtu: 9000
+    bootproto: static
+    bond_mode: active-backup
+    bond_miimon: 100
+    bond_slaves: [eth0]
+  - device: bond1
+    onboot: yes
+    address: 10.62.5.11
+    netmask: 255.255.255.192
+    bootproto: static
+    bond_mode: active-backup
+    bond_miimon: 100
+    mtu: 9000
+    bond_slaves: [eth1]
 
 # Example bonding lacp
 #network_bond_interfaces:

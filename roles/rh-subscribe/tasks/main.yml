@@ -25,8 +25,8 @@
 - name: enable repos for rhel
   command: subscription-manager repos --enable  {{ item }}
   with_items: rhel_repos
-  when: use_rhel
-  changed_when: false
+  when: use_rhel or enable_repos
+  ignore_errors: True
 
 - name: create redhat-support-tool
   file:
