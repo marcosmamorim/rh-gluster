@@ -19,7 +19,7 @@
 
 - name: disable all repos
   command: subscription-manager repos --disable=*
-  when: use_rhel
+  when: use_rhel or enable_repos
   changed_when: false
 
 - name: enable repos for rhel

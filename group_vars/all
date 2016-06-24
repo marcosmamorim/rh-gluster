@@ -145,14 +145,14 @@ gluster_members:
 # In order to ensure that logical volumes created in the volume group are aligned with the underlying hardware RAID.
 
 pv_disks:
-  - vg_name: vg1
+  - vg_name: stg1-internal
     thin_name: tp1
     disk: /dev/vdb
     pv_dataalignment: 1280
     vg_extentsize: 128
     lv_chunk: 1280
     lv_metadatasize: 16G
-  - vg_name: vg2
+  - vg_name: stg1-external
     thin_name: tp2
     disk: /dev/vdc
     pv_dataalignment: 1280
@@ -161,37 +161,37 @@ pv_disks:
     lv_metadatasize: 16G
 
 gluster_bricks:
-  - brick_name: brick1
+  - brick_name: stg1-internal
     virtualsize: 100G
-    vg_name: vg1
+    vg_name: stg1-internal
     thin_name: tp1
-  - brick_name: brick2
+  - brick_name: stg1-external
     virtualsize: 100G
-    vg_name: vg2
+    vg_name: stg1-external
     thin_name: tp2
 
 # TODO: Create method to get bricks mount dynamic
 glusterfs_volumes:
-  - name: GloboTeste
+  - name: GloboInternal
     owner: root
     group: root
     replicas: 2
     force: True
     brick:
-      - "{{ mount_point }}brick1"
-      - "{{ mount_point }}brick2"
-
-#glusterfs_mounts:
-#  - mount_dir: '/var/www'
-#    volume: '{{ ansible_fqdn }}:www-data'
-#    owner: 'root' # optional
-#    group: 'root' # optional
-#    mode: '0755' # optional
+      - "{{ mount_point }}stg1-internal"
+#      - "{{ mount_point }}/stg1-internal/"
+  - name: GloboExternal
+    owner: root
+    group: root
+    replicas: 2
+    force: True
+    brick:
+      - "{{ mount_point }}stg1-external"
 
 use_xfs: True
 mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
-mount_options_xfs: noatime,nodiratime,inode64
-mount_point: /storage/
+mount_options_xfs: nobarrier,inode64,noatime,nodiratime
+mount_point: /
 #mount_options_xfs: noexec,noatime,nodiratime,nodev,inode64,logbsize=256k
 
 ## For JBOD,  size of the metadata device is not necessary.
