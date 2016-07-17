@@ -21,11 +21,11 @@ dns_searchs:
 
 # Name servers
 dns_nameservers:
-  - 10.62.4.1
+  - 8.8.8.8
   - 4.4.4.4
 
 # Reset network configuration
-network_reset: True
+network_reset: False
 
 #Set true to disable firewalld
 disable_firewalld: False
@@ -96,9 +96,6 @@ rhel_subscription_user: username_rhn
 rhel_subscription_pass: password_rhn
 
 # Attach to pool_id
-# Red Hat Employee
-# 8a85f98144844aff014488d058bf15be
-# 8a85f9874011071c01407da00b997cb2
 rhel_pool_id: redhat_pool_id
 
 # Register repos
@@ -114,17 +111,8 @@ rhel_repos:
   - rh-gluster-3-client-for-rhel-7-server-rpms
 
 ################################################
-## Kickstart server
-
-rhel_prefix: rhel-osp-7.2
-use_rhel_iso: false
-use_rhel_http: True
-repo_address: "{{ internal_ip }}"
-kernel_boot_options: "net.ifnames=0"
-
-################################################
 ## Gluster LVM
-reset_lvm: True
+reset_lvm: False
 gluster_group_name: gluster
 glusterfs_server_group: gluster
 glusterfs_arbiter_group: gluster_arbiter
@@ -132,7 +120,7 @@ glusterfs_arbiter_group: gluster_arbiter
 glusterfs_install_server: True
 glusterfs_install_client: False
 gluster_members:
-  - rj-md-storage-02
+  - glusterstorage02
 
 # For JBOD, use an alignment value of 256K.
 # In case of hardware RAID, the alignment_value should be obtained by multiplying the RAID stripe unit size with
@@ -179,7 +167,6 @@ glusterfs_volumes:
     force: True
     brick:
       - "{{ mount_point }}stg1-internal"
-#      - "{{ mount_point }}/stg1-internal/"
   - name: GloboExternal
     owner: root
     group: root
@@ -192,15 +179,3 @@ use_xfs: True
 mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
 mount_options_xfs: nobarrier,inode64,noatime,nodiratime
 mount_point: /
-#mount_options_xfs: noexec,noatime,nodiratime,nodev,inode64,logbsize=256k
-
-## For JBOD,  size of the metadata device is not necessary.
-#use_jbod: False
-#
-## Number of raid data disks
-## If 12 disks are used in a RAID 6 configuration, the number of data disks is 10;
-## on the other hand, if 12 disks are used in a RAID 10 configuration, the number of data disks is 6.
-#raid_data_disks: 10
-#raid_strip_size: 128
-#
-#
