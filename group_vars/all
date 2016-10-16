@@ -7,17 +7,17 @@ upgrade_packages: True
 # Network
 
 # Used to bind services
-mgmt_interface: bond0
+mgmt_interface: eth0
 
 internal_ip: "{{ hostvars[inventory_hostname][ 'ansible_' + mgmt_interface ].ipv4.address }}"
 
 timezone: "America/Sao_Paulo"
 
-dns_domain: openstack.local
+dns_domain: example.com.br
 
 # DNS Name searchs
 dns_searchs:
-  - openstack.local
+  - example.com.br
 
 # Name servers
 dns_nameservers:
@@ -28,7 +28,7 @@ dns_nameservers:
 network_reset: False
 
 #Set true to disable firewalld
-disable_firewalld: False
+disable_firewalld: True
 
 network_modules:
     - nf-conntrack
@@ -120,7 +120,7 @@ glusterfs_arbiter_group: gluster_arbiter
 glusterfs_install_server: True
 glusterfs_install_client: False
 gluster_members:
-  - glusterstorage02
+  - nas-nfs02
 
 # For JBOD, use an alignment value of 256K.
 # In case of hardware RAID, the alignment_value should be obtained by multiplying the RAID stripe unit size with
@@ -133,49 +133,42 @@ gluster_members:
 # In order to ensure that logical volumes created in the volume group are aligned with the underlying hardware RAID.
 
 pv_disks:
-  - vg_name: stg1-internal
+  - vg_name: vgGluster01
     thin_name: tp1
     disk: /dev/vdb
-    pv_dataalignment: 1280
-    vg_extentsize: 128
-    lv_chunk: 1280
+    pv_dataalignment: 2560
+    vg_extentsize: 256
+    lv_chunk: 2560
     lv_metadatasize: 16G
-  - vg_name: stg1-external
-    thin_name: tp2
-    disk: /dev/vdc
-    pv_dataalignment: 1280
-    vg_extentsize: 128
-    lv_chunk: 1280
-    lv_metadatasize: 16G
+#  - vg_name: vg-gluster01
+#    thin_name: tp2
+#    disk: /dev/vdc
+#    pv_dataalignment: 2560
+#    vg_extentsize: 256
+#    lv_chunk: 2560
+#    lv_metadatasize: 16G
 
 gluster_bricks:
-  - brick_name: stg1-internal
+  - brick_name: storage
     virtualsize: 100G
-    vg_name: stg1-internal
+    vg_name: vgGluster01
     thin_name: tp1
-  - brick_name: stg1-external
-    virtualsize: 100G
-    vg_name: stg1-external
-    thin_name: tp2
 
 # TODO: Create method to get bricks mount dynamic
 glusterfs_volumes:
-  - name: GloboInternal
+  - name: volume1
     owner: root
     group: root
     replicas: 2
     force: True
     brick:
-      - "{{ mount_point }}stg1-internal"
-  - name: GloboExternal
-    owner: root
-    group: root
-    replicas: 2
-    force: True
-    brick:
-      - "{{ mount_point }}stg1-external"
+      - "{{ mount_point }}storage"
+    options:
+      - nfs.acl: on
+      - nfs.export-volumes: on
+      - nfs.disable: off
 
 use_xfs: True
-mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=128k,sw=1
+mkfs_options_xfs: -f -i size=512 -n size=8192 -d su=256k,sw=1
 mount_options_xfs: nobarrier,inode64,noatime,nodiratime
 mount_point: /

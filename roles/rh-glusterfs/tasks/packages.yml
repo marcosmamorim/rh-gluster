@@ -15,5 +15,5 @@
     name: '{{ item }}'
     state: installed
   with_items:
-    - redhat-storage-server
+    - glusterfs-server
   when: glusterfs_install_server

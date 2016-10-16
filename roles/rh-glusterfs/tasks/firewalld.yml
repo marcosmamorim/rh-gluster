@@ -21,6 +21,7 @@
     port: "{{ item }}"
     state: enabled
     permanent: True
+    immediate: True
   with_items:
     - 4501/tcp
     - 4501/udp
@@ -28,6 +29,8 @@
     - 32803/udp
     - 662/tcp
     - 662/udp
+    - 24007/tcp
+    - 24007/udp
   when: glusterfs_install_server
 
 - name: CLIENT - set firewalld rule to gluster ports
@@ -35,6 +38,7 @@
     port: "{{ item }}"
     state: enabled
     permanent: True
+    immediate: True
   with_items:
     - 662/tcp
     - 662/udp

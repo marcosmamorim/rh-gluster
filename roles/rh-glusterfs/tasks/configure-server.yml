@@ -38,3 +38,6 @@
   when: inventory_hostname == gluster_master
   tags:
     - create_volumes
+
+#- name: set volume options
+#  command: gluster volume set {{ item.name }}

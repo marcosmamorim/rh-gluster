@@ -50,6 +50,4 @@
   with_items: gluster_bricks
   when: inventory_hostname not in groups[glusterfs_arbiter_group]
 
-
-
 #mkfs.xfs -f -i size=512 -n size=8192 -d su=128k,sw=1 /dev/mapper/vg1-brick1
